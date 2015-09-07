@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Dagny Server"
+        android:key="pref_key_dagny_server">
+        <EditTextPreference
+            android:key="pref_key_dagny_server_host"
+            android:title="DNA Host"
+            android:summary="Hostname or IP for DNA server"
+            android:defaultValue="192.168.1.103" />
+        <EditTextPreference
+            android:key="pref_key_dagny_server_port"
+            android:title="DNA Port"
+            android:summary="Port for DNA server"
+            android:defaultValue="3100" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="User Profile"
+        android:key="pref_key_user_profile">
+        <EditTextPreference
+            android:key="pref_key_username"
+            android:title="Username"
+            android:summary="Username to store data under"
+             />
+    </PreferenceCategory>
+</PreferenceScreen>
