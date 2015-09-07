@@ -40,6 +40,9 @@ public class ManualCountEntry extends AppCompatActivity {
         type = getIntent().getStringExtra(INTENT_TYPE_STRING);
         tags = getIntent().getStringExtra(INTENT_TAGS_STRING);
 
+
+        getSupportActionBar().setTitle(Option.apply(type).getOrElse("Select").toUpperCase());
+
         //TODO set this up
         //((DGMT2)getApplication()).getBus().register(this);
     }
