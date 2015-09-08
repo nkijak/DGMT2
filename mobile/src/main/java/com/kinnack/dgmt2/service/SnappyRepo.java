@@ -52,7 +52,7 @@ public class SnappyRepo {
             Collection<String> primaries = filter(keys, new Predicate<String>() {
                 @Override
                 public boolean apply(String input) {
-                    Log.d("SnappyRepo", "Filtering "+input);
+                    //Log.d("SnappyRepo", "Filtering "+input);
                     return input.split(":").length == 2;
                 }
             });

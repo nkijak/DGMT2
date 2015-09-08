@@ -85,7 +85,7 @@ public class SelectExerciseActivity extends AppCompatActivity {
                 Option<Record> first = None();
                 Option<Record> last = None();
                 for(Record record: records)  {
-                    if (first == null) first = Some(record);
+                    if (!first.canIterate()) first = Some(record);
                     last = Some(record);
                     total += record.getCount();
                 }
