@@ -2,6 +2,7 @@ package com.kinnack.dgmt2.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,7 @@ public class ManualCountEntry extends AppCompatActivity {
         tags = getIntent().getStringExtra(INTENT_TAGS_STRING);
 
 
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(Option.apply(type).getOrElse("Select").toUpperCase());
 
         //TODO set this up
