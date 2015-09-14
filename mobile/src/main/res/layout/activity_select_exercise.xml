@@ -1,95 +1,121 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:layout_width="match_parent">
+        android:background="?colorPrimary">
+
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+            app:expandedTitleMarginStart="72dp"
+            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
             <android.support.v7.widget.Toolbar
-                android:layout_height="?attr/actionBarSize"
+                android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                app:layout_collapseMode="pin"/>
+                android:layout_height="?actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:contentInsetStart="72dp"
+                app:layout_collapseMode="pin" />
+
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="202dp"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SelectExerciseActivity"
-    >
-       <android.support.v7.widget.CardView
-           xmlns:card_view="http://schemas.android.com/apk/res-auto"
-           android:id="@+id/pushupsCard"
-           android:layout_gravity="center"
-           android:layout_width="200dp"
-           android:layout_height="100dp"
-           card_view:cardCornerRadius="4dp"
-           android:layout_alignParentLeft="true"
-           android:layout_alignParentStart="true"
-           android:layout_alignParentRight="true"
-           android:layout_alignParentEnd="true"
-           android:layout_centerInParent="true">
-           <Button
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content"
-               android:text="Pushups"
-               android:id="@+id/pushups"
-               android:onClick="getPushups"/>
-       </android.support.v7.widget.CardView>
-
-       <android.support.v7.widget.CardView
-           xmlns:card_view="http://schemas.android.com/apk/res-auto"
-           android:id="@+id/negPullupsCard"
-           android:layout_gravity="center"
-           android:layout_width="200dp"
-           android:layout_height="100dp"
-           card_view:cardCornerRadius="4dp"
-           android:layout_below="@+id/pushupsCard"
-           android:layout_alignParentLeft="true"
-           android:layout_alignParentStart="true"
-           android:layout_alignRight="@+id/pushupsCard"
-           android:layout_alignEnd="@+id/pushupsCard"
-           android:layout_centerInParent="true">
-        <Button
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="wrap_content"
+        >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/pushupsCard"
+            android:layout_gravity="center"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="-Pullups"
-            android:id="@+id/negPullups"
-            android:layout_below="@+id/pushups"
-            android:onClick="getNegPullups"/>
-       </android.support.v7.widget.CardView>
+            android:layout_height="200dp"
+            card_view:cardCornerRadius="4dp" >
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Pushups"
+                android:id="@+id/pushups"
+                android:onClick="getPushups"/>
+            <com.kinnack.dgmt2.widget.Overview
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="60dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/pushupsByDayChart"
+                />
+        </android.support.v7.widget.CardView>
 
-       <android.support.v7.widget.CardView
-           xmlns:card_view="http://schemas.android.com/apk/res-auto"
-           android:id="@+id/squatsCard"
-           android:layout_gravity="center"
-           android:layout_width="200dp"
-           android:layout_height="100dp"
-           android:layout_below="@+id/negPullupsCard"
-           android:layout_alignParentLeft="true"
-           android:layout_alignParentStart="true"
-           android:layout_alignRight="@+id/negPullupsCard"
-           android:layout_alignEnd="@+id/negPullupsCard"
-           card_view:cardCornerRadius="4dp" >
-           <Button
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content"
-               android:text="Squats"
-               android:id="@+id/squats"
-               android:onClick="getSquats"/>
-       </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/negPullupsCard"
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            card_view:cardCornerRadius="4dp" >
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="-Pullups"
+                android:id="@+id/negPullups"
+                android:onClick="getNegPullups"/>
+            <com.kinnack.dgmt2.widget.Overview
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="60dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/negPushupsByDayChart"
+                />
 
-    </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/squatsCard"
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            card_view:cardCornerRadius="4dp" >
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Squats"
+                android:id="@+id/squats"
+                android:onClick="getSquats"/>
+            <com.kinnack.dgmt2.widget.Overview
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="60dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/squatsByDayChart"
+                />
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

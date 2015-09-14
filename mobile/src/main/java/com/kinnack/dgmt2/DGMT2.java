@@ -12,6 +12,7 @@ import com.kinnack.dgmt2.service.SampleHttpService;
 import com.kinnack.dgmt2.service.SampleRepository;
 import com.kinnack.dgmt2.service.SampleStorage;
 import com.kinnack.dgmt2.service.SnappyRepo;
+import com.kinnack.dgmt2.service.StatisticsService;
 import com.kinnack.dgmt2.service.sampling.HttpSampleStorage;
 import com.kinnack.dgmt2.service.sampling.LocalSampleServiceDecorator;
 import com.kinnack.dgmt2.service.sampling.PingBroadcast;
@@ -91,6 +92,15 @@ public class DGMT2 extends MultiDexApplication {
         }
         return Some(snappyRepo);
     }
+
+    private StatisticsService statsService;
+    public StatisticsService getStatsService() {
+        if (statsService == null) {
+            statsService = new StatisticsService(getRecordRepo().get());
+        }
+        return statsService;
+    }
+
 
     @Override
     public void onCreate() {

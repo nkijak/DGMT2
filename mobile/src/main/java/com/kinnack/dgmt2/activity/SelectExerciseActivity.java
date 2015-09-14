@@ -1,6 +1,7 @@
 package com.kinnack.dgmt2.activity;
 
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,22 +20,31 @@ import com.kinnack.dgmt2.option.Function1;
 import com.kinnack.dgmt2.option.Option;
 import com.kinnack.dgmt2.service.RecordRepository;
 import com.kinnack.dgmt2.service.SnappyRepo;
+import com.kinnack.dgmt2.service.StatisticsService;
+import com.kinnack.dgmt2.widget.Overview;
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static com.kinnack.dgmt2.option.Option.None;
 import static com.kinnack.dgmt2.option.Option.Some;
+import static com.kinnack.dgmt2.service.StatisticsService.FOURTYEIGHT_HOURS_IN_MS;
 
 public class SelectExerciseActivity extends AppCompatActivity {
     private static final String PUSHUPS="pushups";
     private static final String NEGPULLUPS="-pullups";
     private static final String SQUATS="squats";
-    private static final long FOURTYEIGHT_HOURS_IN_MS = 48 * 60 * 60 * 1000;
     private final int FAB_ENTRY=101;
-    private Option<SnappyRepo> repo = None();
+    private StatisticsService statsService;
 
 
     @Override
@@ -45,7 +55,9 @@ public class SelectExerciseActivity extends AppCompatActivity {
         DGMT2 dgmt = (DGMT2)getApplication();
         dgmt.getBus().register(this);
 
-        repo = dgmt.getRecordRepo();
+        statsService = dgmt.getStatsService();
+
+        ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout)).setTitle("DGMT");
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,60 +74,31 @@ public class SelectExerciseActivity extends AppCompatActivity {
     }
 
     protected void updateCounts() {
-        int pushupsRemaining = 100 - fourtyEightHourCountFor(PUSHUPS);
-        int negPullupsRemaining = 30 - fourtyEightHourCountFor(NEGPULLUPS);
-        int squatsRemaining = 100 - fourtyEightHourCountFor(SQUATS);
+        int pushupsRemaining = 100 - statsService.typeCountForPeriod(PUSHUPS, FOURTYEIGHT_HOURS_IN_MS);
+        int negPullupsRemaining = 30 - statsService.typeCountForPeriod(NEGPULLUPS, FOURTYEIGHT_HOURS_IN_MS);
+        int squatsRemaining = 100 - statsService.typeCountForPeriod(SQUATS, FOURTYEIGHT_HOURS_IN_MS);
 
         ((Button)findViewById(R.id.pushups)).setText(pushupsRemaining + " PUSHUPS");
         ((Button)findViewById(R.id.negPullups)).setText(negPullupsRemaining + " -PULLUPS");
         ((Button)findViewById(R.id.squats)).setText(squatsRemaining + " SQUATS");
+
+
+        ((Overview)findViewById(R.id.pushupsByDayChart)).setBuckets(getBuckets(PUSHUPS));
+        ((Overview)findViewById(R.id.negPushupsByDayChart)).setBuckets(getBuckets(NEGPULLUPS));
+        ((Overview)findViewById(R.id.squatsByDayChart)).setBuckets(getBuckets(SQUATS));
     }
 
-    protected int fourtyEightHourCountFor(final String type) {
-        return repo.map(new Function1<SnappyRepo, Collection<Record>>() {
-            @Override
-            public Collection<Record> apply(SnappyRepo r) {
-                long now = new Date().getTime();
-                return r.query(type, new Date(now - FOURTYEIGHT_HOURS_IN_MS), new Date(now));
-            }
-        }).catamorph(0, new Function1<Collection<Record>, Integer>() {
-            @Override
-            public Integer apply(Collection<Record> records) {
-                int total = 0;
-                Option<Record> first = None();
-                Option<Record> last = None();
-                for(Record record: records)  {
-                    if (!first.canIterate()) first = Some(record);
-                    last = Some(record);
-                    total += record.getCount();
-                }
-                long firstWhen = first.map(new Function1<Record, Long>() {
-                    @Override
-                    public Long apply(Record element) {
-                        return element.getWhen();
-                    }
-                }).getOrElse(0l);
-                long lastWhen = last.map(new Function1<Record, Long>() {
-                    @Override
-                    public Long apply(Record element) {
-                        return element.getWhen();
-                    }
-                }).getOrElse(0l);
-                int firstCount = first.map(new Function1<Record, Integer>() {
-                    @Override
-                    public Integer apply(Record element) {
-                        return element.getCount();
-                    }
-                }).getOrElse(0);
-
-                double timeUntilNextExpire = firstWhen + FOURTYEIGHT_HOURS_IN_MS - lastWhen;
-                double timeSinceLast = new Date().getTime() - lastWhen;
-                double percentOfTimeElapsed = timeSinceLast / timeUntilNextExpire;
-
-                double lost = Math.ceil(firstCount * percentOfTimeElapsed);
-                return (int)(total - lost);
-            }
-        });
+    protected TreeMap<String, Integer> getBuckets(String type) {
+        Map<Long, SummaryStatistics> byDay = statsService.typeByDay(type);
+        List<Long> times = new ArrayList(byDay.keySet());
+        Collections.sort(times);
+        List<Long> lastWeek = times.subList(Math.max(0,times.size() - 7), times.size());
+        Collections.reverse(lastWeek);
+        TreeMap<String, Integer> counts = new TreeMap<>();
+        for(Long time : lastWeek) {
+            counts.put(time.toString(), (int) byDay.get(time).getSum());
+        }
+        return counts;
     }
 
     @Override

@@ -45,6 +45,10 @@ public class SnappyRepo {
         }
     }
 
+    public Collection<Record> queryAll(String type) {
+        return query(type, new Date(0), new Date());
+    }
+
     public Collection<Record> query(String type, Date start, Date end) {
         try {
             List<String> keys = Arrays.asList(snappy.findKeysBetween(type + ":" + start.getTime(), type + ":" + end.getTime()));
