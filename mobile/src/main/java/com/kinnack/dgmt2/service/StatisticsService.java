@@ -55,6 +55,18 @@ public class StatisticsService {
         return fuckingJavaFUCK;
     }
 
+    public SummaryStatistics statsForPeriod(final String type, final long period) {
+        long now = new Date().getTime();
+        Collection<Record> records = mRepo.query(type, new Date(now - period), new Date(now));
+
+        SummaryStatistics ss = new SummaryStatistics();
+        for(Record record: records)  {
+            record.getCount();
+            ss.addValue(record.getCount());
+        }
+        return ss;
+    }
+
     public int typeCountForPeriod(final String type, final long period) {
         long now = new Date().getTime();
         Collection<Record> records = mRepo.query(type, new Date(now - period), new Date(now));

@@ -41,13 +41,21 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/pushupsCard"
             android:layout_gravity="center"
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             card_view:cardCornerRadius="4dp" >
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="@dimen/activity_horizontal_margin">
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -63,6 +71,42 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/pushupsByDayChart"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40sp"
+                android:text="0"
+                android:id="@+id/avgPushupsPerDayNum"
+                android:layout_below="@+id/pushupsByDayChart"
+                android:layout_marginLeft="20dp"
+                />
+            <TextView
+                android:text="per\nday"
+                android:id="@+id/avgPushupsPerDayLabel"
+                android:layout_below="@+id/pushupsByDayChart"
+                android:layout_toRightOf="@+id/avgPushupsPerDayNum"
+                android:layout_marginRight="20dp"
+                style="@style/stats_label" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40sp"
+                android:text="0"
+                android:id="@+id/avgPushupsPerNum"
+                android:layout_below="@+id/pushupsByDayChart"
+                android:layout_toRightOf="@+id/avgPushupsPerDayLabel"
+                android:layout_marginLeft="20dp"
+                />
+            <TextView
+                android:text="per"
+                android:id="@+id/avgPushupsPerLabel"
+                android:layout_below="@+id/pushupsByDayChart"
+                android:layout_toRightOf="@+id/avgPushupsPerNum"
+                android:layout_marginRight="20dp"
+                style="@style/stats_label" />
+
+        </RelativeLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -70,23 +114,66 @@
             android:id="@+id/negPullupsCard"
             android:layout_gravity="center"
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             card_view:cardCornerRadius="4dp" >
-            <Button
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="-Pullups"
-                android:id="@+id/negPullups"
-                android:onClick="getNegPullups"/>
-            <com.kinnack.dgmt2.widget.Overview
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="60dp"
                 android:layout_height="fill_parent"
-                android:id="@+id/negPushupsByDayChart"
-                />
+                android:layout_margin="@dimen/activity_horizontal_margin">
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-Pullups"
+                    android:id="@+id/negPullups"
+                    android:onClick="getNegPullups"
+                    android:layout_alignParentTop="true"/>
+                <com.kinnack.dgmt2.widget.Overview
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:id="@+id/negPushupsByDayChart"
+                    android:layout_below="@+id/negPullups"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:text="0"
+                    android:id="@+id/avgNegpullupsPerDayNum"
+                    android:layout_below="@+id/negPushupsByDayChart"
+                    android:layout_marginLeft="20dp"
+                    />
+                <TextView
+                    android:text="per\nday"
+                    android:id="@+id/avgNegpullupsPerDayLabel"
+                    android:layout_below="@+id/negPushupsByDayChart"
+                    android:layout_toRightOf="@+id/avgNegpullupsPerDayNum"
+                    android:layout_marginRight="20dp"
+                    style="@style/stats_label" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:text="0"
+                    android:id="@+id/avgNegpullupsPerNum"
+                    android:layout_below="@+id/negPushupsByDayChart"
+                    android:layout_toRightOf="@+id/avgNegpullupsPerDayLabel"
+                    android:layout_marginLeft="20dp"
+                    />
+                <TextView
+                    android:text="per"
+                    android:id="@+id/avgPushupsPerLabel"
+                    android:layout_below="@+id/negPushupsByDayChart"
+                    android:layout_toRightOf="@+id/avgNegpullupsPerNum"
+                    android:layout_marginRight="20dp"
+                    style="@style/stats_label" />
+
+            </RelativeLayout>
 
         </android.support.v7.widget.CardView>
 
@@ -95,23 +182,66 @@
             android:id="@+id/squatsCard"
             android:layout_gravity="center"
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             card_view:cardCornerRadius="4dp" >
-            <Button
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Squats"
-                android:id="@+id/squats"
-                android:onClick="getSquats"/>
-            <com.kinnack.dgmt2.widget.Overview
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="60dp"
                 android:layout_height="fill_parent"
-                android:id="@+id/squatsByDayChart"
-                />
+                android:layout_margin="@dimen/activity_horizontal_margin">
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Squats"
+                    android:id="@+id/squats"
+                    android:onClick="getSquats"/>
+                <com.kinnack.dgmt2.widget.Overview
+                    android:layout_width="fill_parent"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="60dp"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/squatsByDayChart"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:text="0"
+                    android:id="@+id/avgSquatsPerDayNum"
+                    android:layout_below="@+id/squatsByDayChart"
+                    android:layout_marginLeft="20dp"
+                    />
+                <TextView
+                    android:text="per\nday"
+                    android:id="@+id/avgSquatsPerDayLabel"
+                    android:layout_below="@+id/squatsByDayChart"
+                    android:layout_toRightOf="@+id/avgSquatsPerDayNum"
+                    android:layout_marginRight="20dp"
+                    style="@style/stats_label" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:text="0"
+                    android:id="@+id/avgSquatsPerNum"
+                    android:layout_below="@+id/squatsByDayChart"
+                    android:layout_toRightOf="@+id/avgSquatsPerDayLabel"
+                    android:layout_marginLeft="20dp"
+                    />
+                <TextView
+                    android:text="per"
+                    android:id="@+id/avgSquatsPerLabel"
+                    android:layout_below="@+id/squatsByDayChart"
+                    android:layout_toRightOf="@+id/avgSquatsPerNum"
+                    android:layout_marginRight="20dp"
+                    style="@style/stats_label"
+                    />
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
 

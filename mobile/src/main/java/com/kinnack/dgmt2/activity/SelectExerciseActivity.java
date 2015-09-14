@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kinnack.dgmt2.DGMT2;
@@ -83,16 +84,24 @@ public class SelectExerciseActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.squats)).setText(squatsRemaining + " SQUATS");
 
 
-        ((Overview)findViewById(R.id.pushupsByDayChart)).setBuckets(getBuckets(PUSHUPS));
-        ((Overview)findViewById(R.id.negPushupsByDayChart)).setBuckets(getBuckets(NEGPULLUPS));
-        ((Overview)findViewById(R.id.squatsByDayChart)).setBuckets(getBuckets(SQUATS));
+        updateCard(PUSHUPS, R.id.pushupsByDayChart, R.id.avgPushupsPerDayNum,R.id.avgPushupsPerNum);
+        updateCard(NEGPULLUPS, R.id.negPushupsByDayChart, R.id.avgNegpullupsPerDayNum, R.id.avgNegpullupsPerNum);
+        updateCard(SQUATS, R.id.squatsByDayChart, R.id.avgSquatsPerDayNum, R.id.avgSquatsPerNum);
+    }
+
+    protected void updateCard(String type, int chart, int perDay, int per) {
+        TreeMap<String, Integer> buckets = getBuckets(type);
+        ((Overview)findViewById(chart)).setBuckets(buckets);
+        ((TextView) findViewById(perDay)).setText(""+avgForBuckets(buckets));
+        SummaryStatistics ss = statsService.statsForPeriod(type, FOURTYEIGHT_HOURS_IN_MS);
+        ((TextView)findViewById(per)).setText(""+Math.round(ss.getMean()));
     }
 
     protected TreeMap<String, Integer> getBuckets(String type) {
         Map<Long, SummaryStatistics> byDay = statsService.typeByDay(type);
         List<Long> times = new ArrayList(byDay.keySet());
         Collections.sort(times);
-        List<Long> lastWeek = times.subList(Math.max(0,times.size() - 7), times.size());
+        List<Long> lastWeek = times.subList(Math.max(0, times.size() - 7), times.size());
         Collections.reverse(lastWeek);
         TreeMap<String, Integer> counts = new TreeMap<>();
         for(Long time : lastWeek) {
@@ -100,6 +109,15 @@ public class SelectExerciseActivity extends AppCompatActivity {
         }
         return counts;
     }
+
+    protected long avgForBuckets(TreeMap<String, Integer> buckets) {
+        SummaryStatistics ss = new SummaryStatistics();
+        for (Integer i : buckets.values()) {
+            ss.addValue(i);
+        }
+        return Math.round(ss.getMean());
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
