@@ -66,6 +66,24 @@ public class SelectExerciseActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(SelectExerciseActivity.this, ManualCountEntry.class), FAB_ENTRY);
             }
         });
+        findViewById(R.id.pushupsByDayChart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(InboxActivity.showHistory(SelectExerciseActivity.this, PUSHUPS));
+            }
+        });
+        findViewById(R.id.negPushupsByDayChart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(InboxActivity.showHistory(SelectExerciseActivity.this, NEGPULLUPS));
+            }
+        });
+        findViewById(R.id.squatsByDayChart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(InboxActivity.showHistory(SelectExerciseActivity.this, SQUATS));
+            }
+        });
     }
 
     @Override

@@ -95,7 +95,7 @@ public class Overview extends View {
         backgroundPaint.setColor(0xffcccccc);
 
         Paint highlightPaint = new Paint();
-        highlightPaint.setColor(0xff397f00);
+        highlightPaint.setColor(0x88397f00);
         highlightPaint.setStrokeWidth(2);
 
         int drawingHeight = getHeight() - getPaddingTop()+getPaddingBottom();

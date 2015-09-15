@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:src="@drawable/circle"
+        android:layout_gravity="center_vertical" />
+
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/count"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/keyline_1"/>
+        android:layout_marginLeft="@dimen/keyline_1"
+        android:textSize="40sp"
+        android:text="19"
+        android:layout_gravity="center_vertical|left" />
+    <TextView
+        android:id="@+id/when"
+        style="@style/stats_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:text="2015-06-08T02:23:23-0400"
+        android:layout_gravity="center_vertical|left" />
+
+
 </LinearLayout>
