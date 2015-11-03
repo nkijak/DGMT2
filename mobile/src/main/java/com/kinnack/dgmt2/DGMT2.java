@@ -1,8 +1,8 @@
 package com.kinnack.dgmt2;
 
+import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.kinnack.dgmt2.model.BoundedPingCalculator;
@@ -29,7 +29,7 @@ import static com.kinnack.dgmt2.option.Option.Some;
 /**
  * Created by prodrive555 on 4/18/15.
  */
-public class DGMT2 extends MultiDexApplication {
+public class DGMT2 extends Application {
     final static int PING_MIN_MIN = 5;
     final static int PING_MAX_MIN = 65;
     private SampleRepository mSampleRepo;

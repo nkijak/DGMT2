@@ -15,8 +15,8 @@ import com.kinnack.dgmt2.event.UserNameChanged;
 import com.kinnack.dgmt2.event.UserPinged;
 import com.kinnack.dgmt2.model.CsvTags;
 import com.kinnack.dgmt2.model.Sample;
+import com.kinnack.dgmt2.option.Joiner;
 import com.kinnack.dgmt2.option.Option;
-import com.google.common.base.Joiner;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

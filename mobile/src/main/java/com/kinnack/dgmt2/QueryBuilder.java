@@ -4,8 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kinnack.dgmt2.option.Function1;
+import com.kinnack.dgmt2.option.Joiner;
 import com.kinnack.dgmt2.option.Option;
-import com.google.common.base.Joiner;
 
 import static com.kinnack.dgmt2.option.Option.None;
 

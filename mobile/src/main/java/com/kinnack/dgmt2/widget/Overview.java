@@ -1,6 +1,7 @@
 package com.kinnack.dgmt2.widget;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,9 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import com.kinnack.dgmt2.option.Function1;
+import com.kinnack.dgmt2.option.Option;
 
 public class Overview extends View {
     public Overview(Context context_, AttributeSet attrs_, int defStyle_) {
@@ -46,7 +50,13 @@ public class Overview extends View {
         _counts.clear();
         _counts.addAll(buckets.values());
 
-        _maxCount = Collections.max(buckets.values());
+        _maxCount = Option.apply(buckets.values()).fold(0, new Function1<Collection<Integer>, Integer>() {
+            @Override
+            public Integer apply(Collection<Integer> values) {
+
+                return values.size() > 0 ? Collections.max(values): 0;
+            }
+        });
 
         invalidate();
     }
@@ -84,7 +94,8 @@ public class Overview extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec_, int heightMeasureSpec_) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec_);
-        setMeasuredDimension(Math.max(parentWidth, getSuggestedMinimumWidth()), getSuggestedMinimumHeight());
+        int parentHeight = MeasureSpec.getSize(heightMeasureSpec_);
+        setMeasuredDimension(Math.max(parentWidth, getSuggestedMinimumWidth()), Math.max(parentHeight, getSuggestedMinimumHeight()));
     }
 
     @Override
@@ -92,10 +103,10 @@ public class Overview extends View {
 
 
         Paint backgroundPaint = new Paint();
-        backgroundPaint.setColor(0xffcccccc);
+        backgroundPaint.setColor(0xffE8F5E9);
 
         Paint highlightPaint = new Paint();
-        highlightPaint.setColor(0x88397f00);
+        highlightPaint.setColor(0xff479e00);
         highlightPaint.setStrokeWidth(2);
 
         int drawingHeight = getHeight() - getPaddingTop()+getPaddingBottom();
@@ -112,8 +123,10 @@ public class Overview extends View {
 
         int x = (int)Math.floor(drawingWidth*0.05)+10;
         int chartWidth = (int)Math.floor(drawingWidth*0.95);
-        int gap = (int)Math.floor(chartWidth*0.9/_counts.size()+1);
-        _paint.setStrokeWidth(40);
+        int gap = (int)Math.floor(chartWidth*0.9/(_counts.size()+1));
+        int width = Math.max(20, (int) Math.floor(chartWidth * 0.9) / (_counts.size() + 1));
+        _paint.setStrokeWidth(width);
+        _paint.setStrokeCap(Paint.Cap.ROUND);
         float heightPercent = 95.0f;
         Log.d("SetOverviewChart", "Drawing chart...");
         float min = 1000.0f;

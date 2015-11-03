@@ -18,4 +18,5 @@
     <string name="title_activity_ping_list">Pings</string>
     <string name="title_activity_manual_count_entry">ManualCountEntry</string>
     <string name="title_activity_inbox">InboxActivity</string>
+    <string name="title_activity_exercise_settings">ExerciseSettingsActivity</string>
 </resources>

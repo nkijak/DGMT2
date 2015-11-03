@@ -2,8 +2,8 @@ package com.kinnack.dgmt2.model;
 
 import android.util.Log;
 
+import com.kinnack.dgmt2.option.Joiner;
 import com.kinnack.dgmt2.option.Option;
-import com.google.common.base.Joiner;
 
 import java.util.HashMap;
 import java.util.List;

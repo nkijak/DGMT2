@@ -116,12 +116,12 @@ public class LocationProviderService extends IntentService implements GoogleApiC
     public void onLocationChanged(Location location) {
        Log.d("LocationProviderService", "LocationChanged");
         lastLocation = location;
-        bus.post(lastKnownLocation());
+        for (LocationUpdated loc : lastKnownLocation()) { bus.post(loc); }
     }
 
-    @Produce public LocationUpdated lastKnownLocation() {
+    @Produce public Option<LocationUpdated> lastKnownLocation() {
         Log.d("LocationProviderService", "Last know requested :" + lastLocation);
-        return lastLocation == null ? null : new LocationUpdated(lastLocation);
+        return lastLocation == null ? Option.None() : Option.Some(new LocationUpdated(lastLocation));
     }
 
     @Override

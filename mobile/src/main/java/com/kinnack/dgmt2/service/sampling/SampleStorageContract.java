@@ -2,8 +2,6 @@ package com.kinnack.dgmt2.service.sampling;
 
 import android.provider.BaseColumns;
 
-import com.google.common.base.Joiner;
-
 import java.util.Arrays;
 
 public class SampleStorageContract {
@@ -39,20 +37,14 @@ public class SampleStorageContract {
             String.format(
                     SQL_CREATE_TABLE,
                     SampleEntry.TABLE_NAME,
-                    Joiner.on(", ").join(Arrays.asList(
-                            SampleEntry._ID + " INTEGER PRIMARY KEY",
-                            SampleEntry.COLUMN_TAGS + " TEXT",
-                            SampleEntry.COLUMN_SYNCED + " INTEGER"
-                    )));
+                    SampleEntry._ID + " INTEGER PRIMARY KEY, " + SampleEntry.COLUMN_TAGS + " TEXT, " + SampleEntry.COLUMN_SYNCED + " INTEGER"
+                    );
 
     public static final String MIGRATE_0002_CREATE_TAG_COUNTS =
             String.format(
                     SQL_CREATE_TABLE,
                     TagCountEntry.TABLE_NAME,
-                    Joiner.on(", ").join(Arrays.asList(
-                            TagCountEntry.COLUMN_TAG + " TEXT",
-                            TagCountEntry.COLUMN_SAMPLE_ID + " INTEGER"
-                    ))
+                    TagCountEntry.COLUMN_TAG + " TEXT, " + TagCountEntry.COLUMN_SAMPLE_ID + " INTEGER"
             );
 
     public static final String MIGRATE_0003_ADD_LONGITUDE =

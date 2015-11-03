@@ -1,20 +1,20 @@
 package com.kinnack.dgmt2.service;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-import com.kinnack.dgmt2.IntentUtils;
+import android.util.Log;
+
+
 import com.kinnack.dgmt2.model.Record;
 import com.kinnack.dgmt2.option.Function1;
+import com.kinnack.dgmt2.option.Multimap;
 import com.kinnack.dgmt2.option.Option;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.kinnack.dgmt2.option.Option.None;
@@ -32,20 +32,21 @@ public class StatisticsService {
 
     public Map<Long, SummaryStatistics> typeByDay(final String type) {
         Collection<Record> records = mRepo.queryAll(type);
-        Multimap<Long, Record> countsByDay = Multimaps.index(records, new Function<Record, Long>() {
+        Multimap<Long, Record> countsByDay = Multimap.index(records, new Function1<Record, Long>() {
             @Override
             public Long apply(Record input) {
                 Calendar when = Calendar.getInstance();
                 when.setTimeInMillis(input.getWhen());
-                when.set(Calendar.HOUR, 0);
+                when.set(Calendar.HOUR_OF_DAY, 0);
                 when.set(Calendar.MINUTE, 0);
                 when.set(Calendar.SECOND, 0);
                 when.set(Calendar.MILLISECOND, 0);
+                Log.d("StatsService", when.toString());
                 return when.getTimeInMillis();
             }
         });
         Map<Long, SummaryStatistics> fuckingJavaFUCK = new HashMap<Long, SummaryStatistics>(countsByDay.size());
-        for( Map.Entry<Long, Collection<Record>> entry : countsByDay.asMap().entrySet() ) {
+        for( Map.Entry<Long, List<Record>> entry : countsByDay.asMap().entrySet() ) {
             SummaryStatistics ss = new SummaryStatistics();
             for(Record record: entry.getValue()) {
                 ss.addValue(record.getCount());

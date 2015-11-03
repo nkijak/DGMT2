@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,9 @@ import com.kinnack.dgmt2.option.Option;
 import com.kinnack.dgmt2.service.SnappyRepo;
 import com.kinnack.dgmt2.service.StatisticsService;
 import com.kinnack.dgmt2.widget.Overview;
+
+import org.apache.commons.math3.stat.regression.RegressionResults;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,13 +40,16 @@ public class InboxActivity extends AppCompatActivity {
         return intent;
     }
 
+    Option<String> type = Option.None();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
 
-        final Option<String> type = Option.apply(getIntent().getStringExtra(TYPE_EXTRA));
+        type = Option.apply(getIntent().getStringExtra(TYPE_EXTRA));
 
+        setSupportActionBar((Toolbar)findViewById(R.id.app_bar));
         ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout)).setTitle(type.getOrElse("Indoc"));
         RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerview);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -50,11 +58,16 @@ public class InboxActivity extends AppCompatActivity {
 
         final Record[] records = repo.queryAll(type.getOrElse("")).toArray(new Record[]{});
 
+        SimpleRegression reg = new SimpleRegression();
         TreeMap<String, Integer> counts = new TreeMap<>();
         for (Record record: records) {
-            counts.put(record.getWhen()+"", record.getCount());
+            reg.addData(record.getWhen()*1.0, record.getCount()*1.0);
+            counts.put(record.getWhen() + "", record.getCount());
         }
+        RegressionResults results = reg.regress();
         ((Overview) findViewById(R.id.bar_chart)).setBuckets(counts);
+
+        Log.d("InboxActivity", "Regression: " + results.getRegressionSumSquares());
 
         rv.setAdapter(new RecyclerView.Adapter<ViewHolder>(){
 
@@ -94,6 +107,9 @@ public class InboxActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            for (String t : type) {
+                startActivity(ExerciseSettingsActivity.exerciseSettingsIntent(this, t));
+            }
             return true;
         }
 

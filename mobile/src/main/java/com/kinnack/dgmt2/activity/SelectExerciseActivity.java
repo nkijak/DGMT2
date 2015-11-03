@@ -42,7 +42,7 @@ import static com.kinnack.dgmt2.service.StatisticsService.FOURTYEIGHT_HOURS_IN_M
 
 public class SelectExerciseActivity extends AppCompatActivity {
     private static final String PUSHUPS="pushups";
-    private static final String NEGPULLUPS="-pullups";
+    private static final String NEGPULLUPS="pullups";
     private static final String SQUATS="squats";
     private final int FAB_ENTRY=101;
     private StatisticsService statsService;
@@ -60,12 +60,6 @@ public class SelectExerciseActivity extends AppCompatActivity {
 
         ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout)).setTitle("DGMT");
 
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(SelectExerciseActivity.this, ManualCountEntry.class), FAB_ENTRY);
-            }
-        });
         findViewById(R.id.pushupsByDayChart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,14 +87,17 @@ public class SelectExerciseActivity extends AppCompatActivity {
     }
 
     protected void updateCounts() {
-        int pushupsRemaining = 100 - statsService.typeCountForPeriod(PUSHUPS, FOURTYEIGHT_HOURS_IN_MS);
-        int negPullupsRemaining = 30 - statsService.typeCountForPeriod(NEGPULLUPS, FOURTYEIGHT_HOURS_IN_MS);
-        int squatsRemaining = 100 - statsService.typeCountForPeriod(SQUATS, FOURTYEIGHT_HOURS_IN_MS);
+        int pushupsRemaining = 150 - statsService.typeCountForPeriod(PUSHUPS, FOURTYEIGHT_HOURS_IN_MS);
+        int negPullupsRemaining = 23 - statsService.typeCountForPeriod(NEGPULLUPS, FOURTYEIGHT_HOURS_IN_MS);
+        int squatsRemaining = 150 - statsService.typeCountForPeriod(SQUATS, FOURTYEIGHT_HOURS_IN_MS);
 
-        ((Button)findViewById(R.id.pushups)).setText(pushupsRemaining + " PUSHUPS");
-        ((Button)findViewById(R.id.negPullups)).setText(negPullupsRemaining + " -PULLUPS");
-        ((Button)findViewById(R.id.squats)).setText(squatsRemaining + " SQUATS");
+        //((Button)findViewById(R.id.pushups)).setText(pushupsRemaining + " PUSHUPS");
+        //((Button)findViewById(R.id.negPullups)).setText(negPullupsRemaining + " -PULLUPS");
+        //((Button)findViewById(R.id.squats)).setText(squatsRemaining + " SQUATS");
 
+        ((TextView)findViewById(R.id.pushupsNeeded)).setText(pushupsRemaining + "");
+        ((TextView)findViewById(R.id.negPullupsNeeded)).setText(negPullupsRemaining + "");
+        ((TextView)findViewById(R.id.squatsNeeded)).setText(squatsRemaining + "");
 
         updateCard(PUSHUPS, R.id.pushupsByDayChart, R.id.avgPushupsPerDayNum,R.id.avgPushupsPerNum);
         updateCard(NEGPULLUPS, R.id.negPushupsByDayChart, R.id.avgNegpullupsPerDayNum, R.id.avgNegpullupsPerNum);
@@ -123,6 +120,7 @@ public class SelectExerciseActivity extends AppCompatActivity {
         Collections.reverse(lastWeek);
         TreeMap<String, Integer> counts = new TreeMap<>();
         for(Long time : lastWeek) {
+            Log.d("SelectExerciseActivity", type+":"+time.toString()+":"+ byDay.get(time).getSum());
             counts.put(time.toString(), (int) byDay.get(time).getSum());
         }
         return counts;

@@ -2,10 +2,9 @@ package com.kinnack.dgmt2.service;
 
 import android.util.Log;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.kinnack.dgmt2.model.Location;
 import com.kinnack.dgmt2.model.Record;
+import com.kinnack.dgmt2.option.Function1;
 import com.kinnack.dgmt2.option.Option;
 import com.snappydb.DB;
 import com.snappydb.SnappydbException;
@@ -16,8 +15,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Collections2.transform;
 import static com.kinnack.dgmt2.option.Option.Some;
 
 public class SnappyRepo {
@@ -53,16 +50,16 @@ public class SnappyRepo {
         try {
             List<String> keys = Arrays.asList(snappy.findKeysBetween(type + ":" + start.getTime(), type + ":" + end.getTime()));
             Log.d("SnappyRepo#query", "Found keys: "+keys.size());
-            Collection<String> primaries = filter(keys, new Predicate<String>() {
+            Collection<String> primaries = filter(keys, new Function1<String, Boolean>() {
                 @Override
-                public boolean apply(String input) {
+                public Boolean apply(String input) {
                     //Log.d("SnappyRepo", "Filtering "+input);
                     return input.split(":").length == 2;
                 }
             });
             Log.d("SnappyRepo#query", "Filtered to primary keys"+primaries.size());
 
-            return flatMap(primaries, new Function<String, Option<Record>>() {
+            return flatMap(primaries, new Function1<String, Option<Record>>() {
                 @Override
                 public Option<Record> apply(String input) {
                     String[] parts = input.split(":");
@@ -99,18 +96,34 @@ public class SnappyRepo {
                     snappy.getFloat(key + ":accuracy"),
                     snappy.getLong(key + ":locationtime")));
         } catch (SnappydbException sde) {
-            Log.w("SnappyRepo#query", "Exception gathering parts to make location for "+key, sde);
+            Log.w("SnappyRepo#query", "Exception gathering parts to make location for " + key, sde);
             return Option.None();
         }
     }
 
-    private <I,E> Collection<E> flatMap(Collection<I> input, Function<I, Option<E>> flatmap) {
-        return transform(filter(transform(input, flatmap), new Predicate<Option<E>>() {
+    public static <I, O> Collection<O> transform(Collection<I> input, Function1<I, O> fun) {
+        ArrayList<O> retval = new ArrayList<>(input.size());
+        for(I in : input) {
+            retval.add(fun.apply(in));
+        }
+        return retval;
+    }
+
+    public static <I> Collection<I> filter(Collection<I> input, Function1<I, Boolean> predicate) {
+        ArrayList<I> retval = new ArrayList<>(input.size());
+        for(I in: input) {
+            if (predicate.apply(in)) retval.add(in);
+        }
+        return retval;
+    }
+
+    private <I,E> Collection<E> flatMap(Collection<I> input, Function1<I, Option<E>> flatmap) {
+        return transform(filter(transform(input, flatmap), new Function1<Option<E>, Boolean>() {
                 @Override
-                public boolean apply(Option<E> input) {
+                public Boolean apply(Option<E> input) {
                     return input.canIterate();
                 }
-            }), new Function<Option<E>, E>() {
+            }), new Function1<Option<E>, E>() {
                 @Override
                 public E apply(Option<E> input) {
                     return input.get();
